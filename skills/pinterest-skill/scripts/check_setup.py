@@ -76,5 +76,7 @@ else:
     line("note", "Fonts", "not bundled in this copy; downloaded once on first render")
 
 py = "py" if system == "Windows" else "python3"
-print(f"\nReady. Run the scripts with: {py} scripts/<name>.py ..." if ok else "\nInstall the missing items above, then run this again.")
+here = os.path.dirname(os.path.abspath(__file__))
+print(f"\nReady. From your own project folder (not this skill's), run: {py} {os.path.join(here, '<name>.py')} ..."
+      if ok else "\nInstall the missing items above, then run this again.")
 sys.exit(0 if ok else 1)

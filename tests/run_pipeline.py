@@ -12,6 +12,11 @@ SKILL = os.path.join(ROOT, "skills", "pinterest-skill")
 SCRIPTS = os.path.join(SKILL, "scripts")
 PY = sys.executable
 FF = bool(shutil.which("ffmpeg") and shutil.which("ffprobe"))
+for _s in (sys.stdout, sys.stderr):   # the test prints script output, emoji included, on any console
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 
 def run(*args, ok=True, cwd=None):

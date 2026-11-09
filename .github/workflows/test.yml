@@ -1,0 +1,45 @@
+name: test
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  pipeline:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.12"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install ffmpeg
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          if [ "$RUNNER_OS" = "macOS" ]; then brew install ffmpeg; fi
+          if [ "$RUNNER_OS" = "Windows" ]; then choco install ffmpeg -y --no-progress; fi
+      - run: pip install pillow tzdata
+      - name: No local paths in the skill
+        run: "! grep -rnE '/Users/|/home/[a-z]|[A-Za-z]:[\\\\/]Users' skills/ README.md --include='*.md' --include='*.py' --include='*.json' --include='*.html'"
+      - name: Only documented media (no personal files)
+        run: python tests/check_media.py
+      - name: Example plan passes the checks
+        run: python skills/pinterest-skill/scripts/pin_check.py skills/pinterest-skill/examples/moon-phases/plan.json
+      - name: Full pipeline (render, video, page, check, fix, schedule, preview, log)
+        run: python tests/run_pipeline.py work
+  no-ffmpeg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pillow tzdata
+      - name: Image pins work without ffmpeg
+        run: |
+          for t in ffmpeg ffprobe; do while command -v $t >/dev/null; do sudo rm -f "$(command -v $t)"; done; done
+          python skills/pinterest-skill/scripts/check_setup.py
+          python tests/run_pipeline.py work

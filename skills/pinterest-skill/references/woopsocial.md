@@ -16,7 +16,10 @@ Call `social_accounts_list`. If it works and lists the accounts the user wants, 
 The free plan includes MCP access for 2 social accounts, no card needed (more accounts need a
 paid plan)
 ([pricing](https://woopsocial.com/pricing?utm_source=pinterest-skill&utm_medium=skill)).
-New users sign up in the same browser window as the sign-in, and a project is created for them.
+**New to WoopSocial?** Give the user this link to create the free account first (about a minute),
+then connect as below: https://app.woopsocial.com/signup?utm_source=pinterest-skill&utm_medium=connect
+Signing up inside the sign-in window works too. If `projects_list` comes back empty, create one
+with `projects_create`.
 Setup steps and prompts for every agent: [woopsocial.com/agents](https://woopsocial.com/agents?utm_source=pinterest-skill&utm_medium=skill). What its Pinterest MCP does: [woopsocial.com/social-media-mcp/pinterest-mcp](https://woopsocial.com/social-media-mcp/pinterest-mcp?utm_source=pinterest-skill&utm_medium=skill).
 
 Give the user only the path for the agent you're running in:
